@@ -1,0 +1,2 @@
+[pid:20215] 2026-06-08T08:21:32.170076Z  INFO shioaji::api: P2P receiver closed: Closed
+[pid:20215] 2026-06-08T08:21:32.170074Z  INFO shioaji::api: msg receiver error: Closed
