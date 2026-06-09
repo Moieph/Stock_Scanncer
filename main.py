@@ -75,6 +75,8 @@ def send_telegram(message):
         print(f"⚠️ TG 連線異常: {e}")
 
 
+
+
 # ==================== 📐 對齊 TV (Change ATR Method) 演算法 ====================
 def calculate_tv_supertrend(df, length=10, multiplier=3.0):
     high = df["High"].values
@@ -245,25 +247,28 @@ def escape_md(text):
 
 
 if has_signal:
-    tg_msg = "*📊 SuperTrend 轉折訊號報告*\n\n"
+
     for label, items in intervals.items():
-        if items:
-            emoji = label.split(' ')[0]
-            pure_label = ' '.join(label.split(' ')[1:])
-            esc_label = escape_md(pure_label)
 
-            tg_msg += f"【 {emoji} {esc_label} 】\n"
-            for name, price, bars, sig_time, is_crypto, sig in items:
-                type_emoji = "🟢" if sig == "BUY" else "🔴"
+        if not items:
+            continue
 
-                esc_name = escape_md(name)
-                esc_time = escape_md(sig_time)
-                esc_price = escape_md(str(price))
+        msg = f"*{escape_md(label)}*\n\n"
 
-                # 💡 完美的等寬字體與縮進箭頭排版
-                tg_msg += f"{type_emoji} *{sig}* • `{esc_name}`\n"
-                tg_msg += f"└ 價: {esc_price} \\| {esc_time} \\({bars}根前\\)\n"
-            tg_msg += "\n"
-    send_telegram(tg_msg)
+        for name, price, bars, sig_time, is_crypto, sig in items:
+
+            type_emoji = "🟢" if sig == "BUY" else "🔴"
+
+            msg += (
+                f"{type_emoji} *{sig}* • `{escape_md(name)}`\n"
+                f"└ 價: {escape_md(str(price))}"
+                f" \\| {escape_md(sig_time)}"
+                f" \\({bars}根前\\)\n"
+            )
+
+        send_telegram(msg)
+
+        time.sleep(1)
+
 else:
     send_telegram("📭 SuperTrend 掃描完成，無新轉折訊號。")
